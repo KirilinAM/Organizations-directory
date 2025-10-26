@@ -1,7 +1,7 @@
 from app.database.database import Base, BaseWithId
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
-from typing import List
+from typing import List, Optional
 
 class Organization(BaseWithId):
     name: Mapped[str] = mapped_column(nullable=False)
@@ -15,20 +15,20 @@ class Phone(BaseWithId):
     number: Mapped[str] = mapped_column(nullable=False, index=True)
     organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.id'))
     
-    organization: Mapped[Organization] = relationship('organization', back_populates='phones')
+    organization: Mapped['Organization'] = relationship('Organization', back_populates='phones')
 
 class Building(BaseWithId):
     address: Mapped[str] = mapped_column(nullable=False, index=True)
     latitude: Mapped[float] = mapped_column(nullable=False)
     longitude: Mapped[float] = mapped_column(nullable=False)
 
-    organizations: Mapped[List[Organization]] = relationship('organization',back_populates='building')
+    organizations: Mapped[List[Organization]] = relationship('Organization',back_populates='building')
 
 class Activity(BaseWithId):
     name: Mapped[str] = mapped_column(nullable=False,index=True)
-    parent_id: Mapped[int] = mapped_column(ForeignKey('activitys.id'))
+    parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey('activitys.id'),nullable=True)
 
-    parent: Mapped['Activity'] = relationship('Activity',remote_side=['id'],back_populates='childrens')
+    parent: Mapped['Activity'] = relationship('Activity',remote_side='Activity.id',back_populates='childrens')
     childrens: Mapped[List['Activity']] = relationship('Activity',back_populates='parent')
     organizations: Mapped[List[Organization]] = relationship('Organization',secondary='organization_activity_rels',back_populates='activities')
 
