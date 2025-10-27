@@ -33,5 +33,5 @@ class Activity(BaseWithId):
     organizations: Mapped[List[Organization]] = relationship('Organization',secondary='organization_activity_rels',back_populates='activities')
 
 class Organization_Activity_Rel(Base):
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.id'),primary_key=True)
-    activity_id: Mapped[int] = mapped_column(ForeignKey('activitys.id'),primary_key=True)
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.id',ondelete='CASCADE'),primary_key=True)
+    activity_id: Mapped[int] = mapped_column(ForeignKey('activitys.id',ondelete='CASCADE'),primary_key=True)
