@@ -48,4 +48,4 @@ class OrganizationDAO(BaseDAO):
         
     @classmethod
     async def findAllInArea(cls, area: bld.InArea):
-        if  area.area 
+        pass
