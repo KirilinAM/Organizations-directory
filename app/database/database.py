@@ -19,6 +19,10 @@ class Base(AsyncAttrs, DeclarativeBase):
     def __tablename__(cls) -> str:
         return cls.__name__.lower() + 's'
     
+    def toDict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    
 class BaseWithId(Base):
     __abstract__ = True
 
