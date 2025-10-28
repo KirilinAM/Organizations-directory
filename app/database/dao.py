@@ -8,13 +8,13 @@ class BaseDAO:
     async def findAll(cls, **filter_by):
         async with asyncSessionMaker() as session:
             query = select(cls.model).filter_by(**filter_by)
-            students = await session.execute(query)
-            return students.scalars().all()
+            result = await session.execute(query)
+            return result.scalars().all()
         
     @classmethod
     async def findOneOrNone(cls, **filter_by):
         async with asyncSessionMaker() as session:
             query = select(cls.model).filter_by(**filter_by)
-            students = await session.execute(query)
-            return students.scalars().one_or_none()
+            result = await session.execute(query)
+            return result.scalars().one_or_none()
         

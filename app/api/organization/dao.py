@@ -1,6 +1,7 @@
 from app.database.dao import BaseDAO
 from app.database.models import Organization
 from app.database.database import asyncSessionMaker
+import app.api.building.models as bld
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
 
@@ -28,3 +29,23 @@ class OrganizationDAO(BaseDAO):
             dictResult['building'] = result.building.toDict()
             dictResult['activities'] = [activity.toDict() for activity in result.activities]
             return dictResult
+        
+    @classmethod
+    async def findAllByBuilding(cls, **filterBy):
+        async with asyncSessionMaker() as session:
+            query = select(cls.model).join(cls.model.building).filter_by(**filterBy)
+            result = await session.execute(query)
+            result = result.scalars().all()
+            return [org.toDict() for org in result]
+        
+    @classmethod
+    async def findAllByActivity(cls, **filterBy):
+        async with asyncSessionMaker() as session:
+            query = select(cls.model).join(cls.model.activities).filter_by(**filterBy)
+            result = await session.execute(query)
+            result = result.scalars().all()
+            return [org.toDict() for org in result]
+        
+    @classmethod
+    async def findAllInArea(cls, area: bld.InArea):
+        if  area.area 
