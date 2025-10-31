@@ -1,12 +1,12 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Annotated
 
 class Activity(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     name: str
-
-class ActivityTree(Activity):
-    subactivity: List['Activity']
+    parent_id: int
 
 class ActivityFilter(BaseModel):
     name: str | None = None
