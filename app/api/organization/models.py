@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Annotated
 from app.api.building.models import *
 from app.api.activity.models import *
+
 
 class Organization(BaseModel):
     id: int
@@ -9,6 +10,8 @@ class Organization(BaseModel):
     building_id: int
 
 class OrganizationFullInfo(Organization):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     name: str
     building_id: int
@@ -17,6 +20,7 @@ class OrganizationFullInfo(Organization):
     activities: List['Activity']
 
 class Phone(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     number: str
 
     # @field_validator("number")
@@ -26,6 +30,7 @@ class Phone(BaseModel):
     #     return value
 
 class OrganizationFilter(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     name: str | None = None
     building_id: int | None = None
 
