@@ -21,6 +21,9 @@ class Base(AsyncAttrs, DeclarativeBase):
     
     def toDict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    
+    def __repr__(self) -> str:
+        return str(self.toDict())
 
     
 class BaseWithId(Base):
