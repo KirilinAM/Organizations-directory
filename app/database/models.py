@@ -1,7 +1,8 @@
 from app.database.database import Base, BaseWithId
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
-from typing import List, Optional
+from typing import Any, List, Optional
+from geoalchemy2 import Geography
 
 class Organization(BaseWithId):
     name: Mapped[str] = mapped_column(nullable=False)
@@ -22,7 +23,13 @@ class Building(BaseWithId):
     latitude: Mapped[float] = mapped_column(nullable=False)
     longitude: Mapped[float] = mapped_column(nullable=False)
 
+    geom = mapped_column(Geography(geometry_type='POINT', srid=4326),nullable=False)
+
     organizations: Mapped[List[Organization]] = relationship('Organization',back_populates='building')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geom = f'POINT({self.longitude} {self.latitude})'
 
 class Activity(BaseWithId):
     name: Mapped[str] = mapped_column(nullable=False,index=True)
