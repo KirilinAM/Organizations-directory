@@ -32,6 +32,14 @@ async def getOrganisationByActivity(filterBy: act.ActivityFilter):
 async def getOrganisationByActivityFamily(upperActivityId: int): 
     return await OrganizationDAO.findAllByActivityUpperId(upperActivityId)
 
-@router.post('/in_area',summary="Cписок организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте",response_model=List[org.Organization])
-async def getOrganisationsInArea(inArea: bld.InArea):
-    return await OrganizationDAO.findAllInArea(inArea)
+@router.get('/filter_by/in_area',summary="Cписок организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте",response_model=List[org.Organization])
+async def getOrganisationsInArea(inArea: bld.InArea = Depends()):
+    inAreaDict = inArea.model_dump() #{key:val for key,val in inArea.model_dump().items if val}
+    res = []
+    if inArea.radius:
+        inCircle = bld.InCircle(**inAreaDict)
+        res = await OrganizationDAO.findAllInCircle(inCircle)
+    elif inArea.bbox_down:
+        inBox = bld.InBox(**inAreaDict)
+        res = await OrganizationDAO.findAllInBox(inBox)
+    return res
