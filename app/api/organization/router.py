@@ -4,8 +4,9 @@ import app.api.building.models as bld
 import app.api.activity.models as act
 from typing import List
 from app.api.organization.dao import OrganizationDAO
+from app.security import verifyApiKey
 
-router = APIRouter(prefix='/org',tags=['Работа с организациями'])
+router = APIRouter(prefix='/org',tags=['Работа с организациями'],dependencies=[Depends(verifyApiKey)])
 
 
 @router.get('/',summary="Получить все организации", response_model=List[org.Organization])

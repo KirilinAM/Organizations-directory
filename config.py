@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: int
     DB_NAME: str
+    API_KEY: str
     
     # DATABASE_SQLITE = 'sqlite+aiosqlite:///data/db.sqlite3'
     model_config = SettingsConfigDict(
