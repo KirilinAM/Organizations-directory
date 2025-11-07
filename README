@@ -1,0 +1,4 @@
+Докер запускать с переменными среды:
+DB_USER=example
+DB_PASSWORD=example
+API_KEY=example
