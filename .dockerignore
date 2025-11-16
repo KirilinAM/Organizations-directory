@@ -20,7 +20,4 @@ coverage.xml
 .venv
 .env
 .DS_Store
-README.md
-alembic.ini
-test_data.py
-migration/
+README
