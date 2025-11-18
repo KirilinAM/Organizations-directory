@@ -30,3 +30,16 @@ class BaseWithId(Base):
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(primary_key=True,autoincrement=True)
+
+
+def connection(method):
+    async def wrapper(*args, **kwargs):
+        async with asyncSessionMaker() as session:
+            try:
+                return await method(*args, session=session, **kwargs)
+            except Exception as e:
+                await session.rollback()  
+                raise e  
+            finally:
+                await session.close() 
+    return wrapper
