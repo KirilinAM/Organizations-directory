@@ -1,6 +1,5 @@
 from app.database.dao import BaseDAO
 from app.database.models import Organization, Organization_Activity_Rel, Building
-from app.database.database import connection
 import app.api.building.models as bld
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload, selectinload
@@ -13,7 +12,6 @@ class OrganizationDAO(BaseDAO):
     model = Organization
 
     @classmethod
-    @connection
     async def findFullData(cls, session: AsyncSession, id: int):
         query = (
             select(cls.model)
@@ -27,7 +25,6 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    @connection
     async def findAllByBuilding(cls,  session: AsyncSession, **filterBy):
         query = (
             select(cls.model)
@@ -42,7 +39,6 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    @connection
     async def findAllByActivity(cls, session: AsyncSession, **filterBy):
         query = (
             select(cls.model)
@@ -56,7 +52,6 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    @connection
     async def findAllByActivityUpperId(cls, session: AsyncSession, upperId):
         activityCte = await ActivityDAO.getItAndAllDescendansIdCte(upperId)
         query = (
@@ -73,7 +68,6 @@ class OrganizationDAO(BaseDAO):
         return result
 
     @classmethod
-    @connection
     async def findAllInCircle(cls, session: AsyncSession, circle: bld.InCircle):
         lat = circle.circle_latitude
         lng = circle.circle_longitude
@@ -100,7 +94,6 @@ class OrganizationDAO(BaseDAO):
 
 
     @classmethod
-    @connection
     async def findAllInBox(cls, session: AsyncSession, box: bld.InBox):
         minLat = box.bbox_down
         maxLat = box.bbox_top

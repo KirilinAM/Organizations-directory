@@ -1,6 +1,5 @@
 from app.database.dao import BaseDAO
 from app.database.models import Activity
-from app.database.database import connection
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import aliased
@@ -10,7 +9,6 @@ class ActivityDAO(BaseDAO):
     model = Activity
 
     @classmethod
-    @connection
     async def getItAndAllDescendansIdCte(cls, id: int, maxDepth: int = 3):
         """
         Генератор запроса: Активность по id и все её потомки до maxDepth уровня
@@ -46,7 +44,6 @@ class ActivityDAO(BaseDAO):
         return activity_tree_cte
     
     @classmethod
-    @connection
     async def getItAndAllDescendans(cls, session: AsyncSession, id: int, maxDepth: int = 3):
         cte = await cls.getItAndAllDescendansIdCte(id, maxDepth)
         query = select(Activity).join(cte,cte.c.id == Activity.id)
