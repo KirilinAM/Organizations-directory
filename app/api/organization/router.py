@@ -7,7 +7,7 @@ from typing import List
 from app.api.organization.dao import OrganizationDAO
 from app.security import verifyApiKey
 
-router = APIRouter(prefix='/org',tags=['Работа с организациями'],dependencies=[Depends(verifyApiKey)])
+router = APIRouter(prefix='/v1/organizations',tags=['Работа с организациями'],dependencies=[Depends(verifyApiKey)])
 
 
 @router.get('/',summary="Получить все организации", response_model=List[org.Organization])
