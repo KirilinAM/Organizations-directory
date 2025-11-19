@@ -7,41 +7,13 @@ from typing import List
 from app.api.organization.dao import OrganizationDAO
 from app.security import verifyApiKey
 
-router = APIRouter(prefix='/v1/organizations',tags=['Работа с организациями'],dependencies=[Depends(verifyApiKey)])
+router = APIRouter(prefix='/v1/organizations',tags=['Организации'],dependencies=[Depends(verifyApiKey)])
 
-
-@router.get('/',summary="Получить все организации", response_model=List[org.Organization])
-async def getAllOrganisation():
-    return await connection(OrganizationDAO.findAll)()
-
-@router.post('/',summary="Получить все организации c возможностью фильтрации", response_model=List[org.Organization])
+@router.post('/',summary="Получение организаций", response_model=List[org.OrganizationFullInfo])
 async def getAllOrganisationByFilter(filterBy : org.OrganizationFilter):
     return await connection(OrganizationDAO.findAll)(**filterBy.toDict())
 
-@router.get('/{id}',summary="Получить полную информациию об организации по id",response_model=org.OrganizationFullInfo | None)
+@router.get('/{id}',summary="Получение организации по id",response_model=org.OrganizationFullInfo | None)
 async def getOrganisationById(id: int):
     return await connection(OrganizationDAO.findFullData)(id=id)
 
-@router.post('/filter_by/building',summary="Получить организации с фильтром по полям здания",response_model=List[org.OrganizationFullInfo])
-async def getOrganisationsByBuilding(filterBy: bld.BuildingFilter): 
-    return await connection(OrganizationDAO.findAllByBuilding)(**filterBy.toDict())
-
-@router.post('/filter_by/activity',summary="Получить организации с фильтром по полям деятельности",response_model=List[org.OrganizationFullInfo])
-async def getOrganisationByActivity(filterBy: act.ActivityFilter): 
-    return await connection(OrganizationDAO.findAllByActivity)(**filterBy.toDict())
-
-@router.get('/filter_by/activity/{upperActivityId}',summary="Получить организации с активностью по id или её субоктивностями",response_model=List[org.OrganizationFullInfo])
-async def getOrganisationByActivityFamily(upperActivityId: int): 
-    return await connection(OrganizationDAO.findAllByActivityUpperId)(upperActivityId)
-
-@router.get('/filter_by/in_area',summary="Cписок организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте",response_model=List[org.OrganizationFullInfo])
-async def getOrganisationsInArea(inArea: bld.InArea = Depends()):
-    inAreaDict = inArea.model_dump() #{key:val for key,val in inArea.model_dump().items if val}
-    res = []
-    if inArea.radius:
-        inCircle = bld.InCircle(**inAreaDict)
-        res = await connection(OrganizationDAO.findAllInCircle)(inCircle)
-    else:
-        inBox = bld.InBox(**inAreaDict)
-        res = await connection(OrganizationDAO.findAllInBox)(inBox)
-    return res
