@@ -6,7 +6,7 @@ from datetime import datetime
 
 DATABASE_URL = settings.getAsyncDbUrl()
 
-engine = create_async_engine(url=DATABASE_URL)
+engine = create_async_engine(url=DATABASE_URL,echo=settings.SQL_ECHO)
 asyncSessionMaker = async_sessionmaker(engine,expire_on_commit=False)
 
 class Base(AsyncAttrs, DeclarativeBase):
