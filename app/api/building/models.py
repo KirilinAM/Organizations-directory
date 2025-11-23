@@ -14,27 +14,17 @@ class BuildingFilter(BaseModel):
     address: str | None = None
     latitude: Latitude | None = None
     longitude: Longitude | None = None
-    
-    def toDict(self):
-        return {key: val for key, val in self.model_dump().items() if val}
-    
-class InArea(BaseModel):
-    circle_latitude: Latitude | None = Field(default=None,description='Широта центра окружности')
-    circle_longitude: Longitude | None = Field(default=None,description='Долгота центра окружности')
-    radius: float | None = Field(default=None,gt=0,description='Радиус окружности в км')
-    bbox_down: Latitude | None = Field(default=None,description='Минимальная широта прямоугольника')
-    bbox_top: Latitude | None = Field(default=None,description='Максимальная широта прямоугольника')
-    bbox_left: Longitude | None = Field(default=None,description='Минимальная долгота прямоугольника')
-    bbox_right: Longitude | None = Field(default=None,description='Максимальная долгота прямоугольника')
-    
+    radius: float | None = Field(default=None,gt=0,description='Радиус окружности в км. Взаимоисключающе с bbox_')
+    bbox_latitude: Latitude | None = Field(default=None,description='Размах широты прямоугольника. Взаимоисключающе с radius')
+    bbox_right: Longitude | None = Field(default=None,description='Размах долготы прямоугольника. Взаимоисключающе с radius')
 
-class InCircle(BaseModel):
-    circle_latitude: Latitude = Field(description='Широта центра окружности')
-    circle_longitude: Longitude= Field(description='Долгота центра окружности')
-    radius: float= Field(gt=0,description='Радиус окружности в км')
+# class InCircle(BaseModel):
+#     circle_latitude: Latitude = Field(description='Широта центра окружности')
+#     circle_longitude: Longitude = Field(description='Долгота центра окружности')
+#     radius: float = Field(gt=0,description='Радиус окружности в км')
 
-class InBox(BaseModel):
-    bbox_top: Latitude = Field(description='Максимальная широта прямоугольника')
-    bbox_down: Latitude = Field(description='Минимальная широта прямоугольника')
-    bbox_right: Longitude = Field(description='Максимальная долгота прямоугольника')
-    bbox_left: Longitude = Field(description='Минимальная долгота прямоугольника')
+# class InBox(BaseModel):
+#     bbox_top: Latitude = Field(description='Максимальная широта прямоугольника')
+#     bbox_down: Latitude = Field(description='Минимальная широта прямоугольника')
+#     bbox_right: Longitude = Field(description='Максимальная долгота прямоугольника')
+#     bbox_left: Longitude = Field(description='Минимальная долгота прямоугольника')

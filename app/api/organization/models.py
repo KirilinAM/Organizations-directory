@@ -33,6 +33,3 @@ class OrganizationFilter(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     name: str | None = None
     building_id: int | None = None
-
-    def toDict(self):
-        return {key: val for key, val in self.model_dump().items() if val}

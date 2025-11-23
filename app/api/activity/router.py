@@ -7,19 +7,19 @@ from app.security import verifyApiKey
 
 router = APIRouter(prefix='/v1/activities',tags=['Деятельность'],dependencies=[Depends(verifyApiKey)])
 
-@router.post('/',summary="Получение деятельностей", response_model=List[act.Activity])
-async def getAllOrganisationByFilter(filterBy: act.ActivityFilter):
-    return await connection(ActivityDAO.findAll)(**filterBy.toDict())
+@router.get('/',summary="Получение деятельностей", response_model=List[act.Activity])
+async def getAllOrganisationByFilter(filterBy: act.ActivityFilter = Depends()):
+    return await connection(ActivityDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
-@router.get('/{id}',summary="Получение деятельности по id",response_model=act.Activity | None)
+@router.get('/{id}',summary="Получение деятельности по id и её поддеятельностей",response_model=act.Activity | None)
 async def getOrganisationById(id: int):
-    return await connection(ActivityDAO.findAll)(id=id)
+    return await connection(ActivityDAO.findOneOrNone)(id=id)
 
 @router.get(
-        '/filter_by/activity/{upperActivityId}'
-        ,summary="Получение поддеятельностей деятельности по id"
+        '/{id}/organizations'
+        ,summary="Получение организаций ведущих указанную деятельность / её поддеятельности"
         ,response_model=List[act.Activity]
 )
-async def getOrganisationByActivityFamily(upperActivityId: int): 
+async def getOrganisationByActivityFamily(id: int): 
     res = [] #await connection(OrganizationDAO.findAllByActivityUpperId)(upperActivityId)
     return res
