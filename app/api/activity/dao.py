@@ -48,7 +48,12 @@ class ActivityDAO(BaseDAO):
         cte = await cls.getItAndAllDescendansIdCte(id, maxDepth)
         query = select(Activity).join(cte,cte.c.id == Activity.id)
 
-        result = await session.execute(query)
-        result = result.scalars().all()
+        descendans = await session.execute(query.where(Activity.id != id))
+        descendans = descendans.scalars().all()
+        root = await session.execute(query.where(Activity.id == id))
+        root = root.scalars().one_or_none()
 
-        return result
+        return {
+            'root': root
+            ,'descendans': descendans
+        }

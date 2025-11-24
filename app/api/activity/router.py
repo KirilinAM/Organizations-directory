@@ -11,9 +11,9 @@ router = APIRouter(prefix='/v1/activities',tags=['Деятельность'],dep
 async def getAllOrganisationByFilter(filterBy: act.ActivityFilter = Depends()):
     return await connection(ActivityDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
-@router.get('/{id}',summary="Получение деятельности по id и её поддеятельностей",response_model=act.Activity | None)
+@router.get('/{id}',summary="Получение деятельности по id и её поддеятельностей",response_model=act.ActivityWithDescendans)
 async def getOrganisationById(id: int):
-    return await connection(ActivityDAO.findOneOrNone)(id=id)
+    return await connection(ActivityDAO.getItAndAllDescendans)(id=id)
 
 @router.get(
         '/{id}/organizations'
