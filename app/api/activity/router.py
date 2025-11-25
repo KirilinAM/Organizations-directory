@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 import app.api.activity.models as act
+import app.api.organization.models as org
 from app.database.database import connection
 from typing import List
 from app.api.activity.dao import ActivityDAO
+from app.api.organization.dao import OrganizationDAO
 from app.security import verifyApiKey
 
 router = APIRouter(prefix='/v1/activities',tags=['Деятельность'],dependencies=[Depends(verifyApiKey)])
@@ -18,8 +20,8 @@ async def getOrganisationById(id: int):
 @router.get(
         '/{id}/organizations'
         ,summary="Получение организаций ведущих указанную деятельность / её поддеятельности"
-        ,response_model=List[act.Activity]
+        ,response_model=List[org.Organization]
 )
 async def getOrganisationByActivityFamily(id: int): 
-    res = [] #await connection(OrganizationDAO.findAllByActivityUpperId)(upperActivityId)
+    res = await connection(OrganizationDAO.findAllByActivityUpperId)(upperId=id)
     return res

@@ -7,6 +7,7 @@ from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.activity.dao import ActivityDAO
 from geoalchemy2 import Geography
+from app.api.activity.dao import ActivityDAO
 
 class OrganizationDAO(BaseDAO):
     model = Organization
@@ -25,7 +26,7 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    async def findAllByBuilding(cls,  session: AsyncSession, **filterBy):
+    async def findAllByBuildingId(cls,  session: AsyncSession, **filterBy):
         query = (
             select(cls.model)
             .join(cls.model.building)
@@ -39,19 +40,6 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    async def findAllByActivity(cls, session: AsyncSession, **filterBy):
-        query = (
-            select(cls.model)
-            .join(cls.model.activities)
-            .filter_by(**filterBy)
-            .distinct()
-            .options(selectinload(cls.model.phones),joinedload(cls.model.building),selectinload(cls.model.activities))
-        )
-        result = await session.execute(query)
-        result = result.scalars().all()
-        return result
-        
-    @classmethod
     async def findAllByActivityUpperId(cls, session: AsyncSession, upperId):
         activityCte = await ActivityDAO.getItAndAllDescendansIdCte(upperId)
         query = (
@@ -59,7 +47,6 @@ class OrganizationDAO(BaseDAO):
             .join(Organization_Activity_Rel)
             .join(activityCte, activityCte.c.id == Organization_Activity_Rel.activity_id)
             .distinct()
-            .options(selectinload(cls.model.phones),joinedload(cls.model.building),selectinload(cls.model.activities))
         )
 
         result = await session.execute(query)
