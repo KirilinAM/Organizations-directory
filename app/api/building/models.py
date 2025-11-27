@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import Annotated
+from pydantic import BaseModel, Field, ValidationError
+from typing import Annotated, Type
 
 Latitude = Annotated[float,Field(ge=-90,le=90,description='Широта')]
 Longitude = Annotated[float,Field(ge=-180,le=180,description='Долгота')]
@@ -18,13 +18,21 @@ class BuildingFilter(BaseModel):
     bbox_latitude: Latitude | None = Field(default=None,description='Размах широты прямоугольника. Взаимоисключающе с radius')
     bbox_right: Longitude | None = Field(default=None,description='Размах долготы прямоугольника. Взаимоисключающе с radius')
 
-# class InCircle(BaseModel):
-#     circle_latitude: Latitude = Field(description='Широта центра окружности')
-#     circle_longitude: Longitude = Field(description='Долгота центра окружности')
-#     radius: float = Field(gt=0,description='Радиус окружности в км')
+class InCircle(BaseModel):
+    latitude: Latitude
+    longitude: Longitude
+    radius: float = Field(gt=0,description='Радиус окружности в км')
 
-# class InBox(BaseModel):
-#     bbox_top: Latitude = Field(description='Максимальная широта прямоугольника')
-#     bbox_down: Latitude = Field(description='Минимальная широта прямоугольника')
-#     bbox_right: Longitude = Field(description='Максимальная долгота прямоугольника')
-#     bbox_left: Longitude = Field(description='Минимальная долгота прямоугольника')
+class InBox(BaseModel):
+    latitude: Latitude 
+    longitude: Longitude 
+    bbox_latitude: Latitude
+    bbox_right: Longitude
+
+def isValidation(model: Type[BaseModel], **data) -> bool:
+    try:
+        model(**data)
+    except ValidationError:
+        return False
+    else:
+        return True

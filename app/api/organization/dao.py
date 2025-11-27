@@ -13,7 +13,7 @@ class OrganizationDAO(BaseDAO):
     model = Organization
 
     @classmethod
-    async def findFullData(cls, session: AsyncSession, id: int):
+    async def findFullData(cls, id: int, session: AsyncSession):
         query = (
             select(cls.model)
             .filter_by(id=id)
@@ -26,7 +26,7 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    async def findAllByBuildingId(cls,  session: AsyncSession, **filterBy):
+    async def findAllByBuildingId(cls, session: AsyncSession, **filterBy):
         query = (
             select(cls.model)
             .join(cls.model.building)
@@ -40,7 +40,7 @@ class OrganizationDAO(BaseDAO):
         return result
         
     @classmethod
-    async def findAllByActivityUpperId(cls, session: AsyncSession, upperId):
+    async def findAllByActivityUpperId(cls, upperId: int, session: AsyncSession):
         activityCte = await ActivityDAO.getItAndAllDescendansIdCte(upperId)
         query = (
             select(cls.model)
