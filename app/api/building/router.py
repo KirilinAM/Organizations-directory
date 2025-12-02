@@ -11,22 +11,24 @@ router = APIRouter(prefix='/v1/buildings',tags=['Здания'],dependencies=[De
 async def getAllOrganisationByFilter(filterBy : bld.BuildingFilter = Depends()):
     return await connection(BuildingDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
+@router.get(
+        '/in_circle'
+        ,summary="Получение зданий, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки"
+        ,response_model=List[bld.Building]
+)
+async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
+    return await connection(BuildingDAO.findAllInCircle)(**inCircle.model_dump(exclude_none=True))
+
+@router.get(
+        '/in_box'
+        ,summary="Получение зданий, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки"
+        ,response_model=List[bld.Building]
+)
+async def getOrganisationsInBox(inBox: bld.InBox = Depends()):
+    return await connection(BuildingDAO.findAllInBox)(**inBox.model_dump(exclude_none=True))
+
 @router.get('/{id}',summary="Получение здания по id",response_model=bld.Building | None)
 async def getOrganisationById(id: int):
     return await connection(BuildingDAO.findOneOrNone)(id=id)
 
-# @router.get(
-#         '/filter_by/in_area'
-#         ,summary="Cписок организаций, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки на карте"
-#         ,response_model=List[List[bld.Building]]
-# )
-# async def getOrganisationsInArea(inArea: bld.InArea = Depends()):
-#     inAreaDict = inArea.model_dump() 
-#     res = []
-#     # if inArea.radius:
-#     #     inCircle = bld.InCircle(**inAreaDict)
-#     #     res = await connection(BuildingDAO.findAllInCircle)(inCircle)
-#     # else:
-#     #     inBox = bld.InBox(**inAreaDict)
-#     #     res = await connection(BuildingDAO.findAllInBox)(inBox)
-#     return res
+

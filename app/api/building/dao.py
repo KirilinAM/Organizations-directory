@@ -11,30 +11,15 @@ class BuildingDAO(BaseDAO):
 
     @classmethod
     async def findAll(cls, session: AsyncSession, **filter_by):
-        usualFilterRes = await super().findAll(session, **filter_by)
-        inAreaRes = await cls.findAllInArea(session, **filter_by)
-        # union = select(usualFilterRes).join(inAreaRes)
-        return usualFilterRes
-    
-    @classmethod 
-    async def findAllInArea(cls, session: AsyncSession, **inArea):
-        if isValidation(InCircle,**inArea):
-            inCircle = InCircle(**inArea)
-            res = await BuildingDAO.findAllInCircle(session=session,inCircle=inCircle)
-        elif isValidation(InBox,**inArea):
-            inBox = InBox(**inArea)
-            res = await BuildingDAO.findAllInBox(session=session,inBox=inBox)
-        else:
-            res = []
-        
-        return res
-
-    @classmethod
-    async def findAllInCircle(cls, session: AsyncSession, inCircle: InCircle):
-        pass
-
+        return await super().findAll(session, **filter_by)
     
     @classmethod
-    async def findAllInBox(cls, session: AsyncSession, inBox: InBox):
-        pass
+    async def findAllInCircle(cls, session: AsyncSession, **inCircle):
+        print('in circle')
+        return []
+
+    @classmethod
+    async def findAllInBox(cls, session: AsyncSession, **inBox):
+        print('in box')
+        return []
 

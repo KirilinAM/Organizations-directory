@@ -14,20 +14,17 @@ class BuildingFilter(BaseModel):
     address: str | None = None
     latitude: Latitude | None = None
     longitude: Longitude | None = None
-    radius: float | None = Field(default=None,gt=0,description='Радиус окружности в км. Взаимоисключающе с bbox_')
-    bbox_latitude: Latitude | None = Field(default=None,description='Размах широты прямоугольника. Взаимоисключающе с radius')
-    bbox_right: Longitude | None = Field(default=None,description='Размах долготы прямоугольника. Взаимоисключающе с radius')
 
 class InCircle(BaseModel):
     latitude: Latitude
     longitude: Longitude
-    radius: float = Field(gt=0,description='Радиус окружности в км')
+    radius: float = Field(ge=0,description='Радиус окружности в км')
 
 class InBox(BaseModel):
     latitude: Latitude 
     longitude: Longitude 
-    bbox_latitude: Latitude
-    bbox_right: Longitude
+    bbox_latitude: float = Field(ge=0,description='Размах широты прямоугольника')
+    bbox_longitude: float = Field(ge=0,description='Размах долготы прямоугольника')
 
 def isValidation(model: Type[BaseModel], **data) -> bool:
     try:
