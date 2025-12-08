@@ -42,7 +42,7 @@ class OrganizationDAO(BaseDAO):
         
     @classmethod
     async def findByActivityUpperId(cls, upperId: int, session: AsyncSession):
-        activityCte = await ActivityDAO.getItAndAllDescendansIdCte(upperId)
+        activityCte = await ActivityDAO._getItAndAllDescendans(upperId)
         query = (
             select(cls.model)
             .join(Organization_Activity_Rel)

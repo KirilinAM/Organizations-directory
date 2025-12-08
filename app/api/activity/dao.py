@@ -7,9 +7,24 @@ from sqlalchemy.sql.expression import literal
 
 class ActivityDAO(BaseDAO):
     model = Activity
+    
+    @classmethod
+    async def getItAndAllDescendans(cls, session: AsyncSession, id: int, maxDepth: int = 3):
+        cte = await cls._getItAndAllDescendans(id, maxDepth)
+        query = select(Activity).join(cte,cte.c.id == Activity.id)
+
+        descendans = await session.execute(query.where(Activity.id != id))
+        descendans = descendans.scalars().all()
+        root = await session.execute(query.where(Activity.id == id))
+        root = root.scalars().one_or_none()
+
+        return {
+            'root': root
+            ,'descendans': descendans
+        }
 
     @classmethod
-    async def getItAndAllDescendansIdCte(cls, id: int, maxDepth: int = 3):
+    async def _getItAndAllDescendans(cls, id: int, maxDepth: int = 3):
         """
         Генератор запроса: Активность по id и все её потомки до maxDepth уровня
         """
@@ -43,17 +58,3 @@ class ActivityDAO(BaseDAO):
 
         return activity_tree_cte
     
-    @classmethod
-    async def getItAndAllDescendans(cls, session: AsyncSession, id: int, maxDepth: int = 3):
-        cte = await cls.getItAndAllDescendansIdCte(id, maxDepth)
-        query = select(Activity).join(cte,cte.c.id == Activity.id)
-
-        descendans = await session.execute(query.where(Activity.id != id))
-        descendans = descendans.scalars().all()
-        root = await session.execute(query.where(Activity.id == id))
-        root = root.scalars().one_or_none()
-
-        return {
-            'root': root
-            ,'descendans': descendans
-        }
