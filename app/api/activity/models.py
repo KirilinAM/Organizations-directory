@@ -11,8 +11,7 @@ class Activity(BaseModel):
 class ActivityFilter(BaseModel):
     name: str | None = None
 
-class ActivityWithDescendans(BaseModel):
+class ActivityWithDescendans(Activity):
     # model_config = ConfigDict(from_attributes=True)
 
-    root: Activity
     descendans: List[Activity]

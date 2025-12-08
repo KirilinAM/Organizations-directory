@@ -18,10 +18,12 @@ class ActivityDAO(BaseDAO):
         root = await session.execute(query.where(Activity.id == id))
         root = root.scalars().one_or_none()
 
-        return {
-            'root': root
-            ,'descendans': descendans
-        }
+        result = {}
+        if root:
+            result = root.toDict()
+            result['descendans'] = descendans
+
+        return result
 
     @classmethod
     async def _getItAndAllDescendans(cls, id: int, maxDepth: int = 3):
