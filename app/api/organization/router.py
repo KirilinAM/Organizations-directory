@@ -13,6 +13,31 @@ router = APIRouter(prefix='/v1/organizations',tags=['Организации'],de
 async def getAllOrganisationByFilter(filterBy : org.OrganizationFilter = Depends()):
     return await connection(OrganizationDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
+@router.get(
+        '/in_circle'
+        ,summary="Получение организаций из зданий, которые находятся в заданном радиусе относительно указанной точки"
+        ,response_model=List[org.Organization]
+)
+async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
+    return await connection(OrganizationDAO.findByBuildingInCircle)(**inCircle.model_dump(exclude_none=True))
+
+@router.get(
+        '/in_box'
+        ,summary="Получение организаций из зданий, которые находятся в заданной прямоугольной области относительно указанной точки"
+        ,response_model=List[org.Organization]
+)
+async def getOrganisationsInBox(inBox: bld.InBox = Depends()):
+    return await connection(OrganizationDAO.findByBuildingInBox)(**inBox.model_dump(exclude_none=True))
+
+@router.get(
+        '/by_activity_tree'
+        ,summary="Получение организаций ведущих указанную деятельность / её поддеятельности"
+        ,response_model=List[org.Organization]
+)
+async def getOrganisationByActivityFamily(upper_id: int): 
+    res = await connection(OrganizationDAO.findByActivityUpperId)(upperId=upper_id)
+    return res
+
 @router.get('/{id}',summary="Получение организации по id",response_model=org.OrganizationFullInfo | None)
 async def getOrganisationById(id: int):
     return await connection(OrganizationDAO.findFullData)(id=id)

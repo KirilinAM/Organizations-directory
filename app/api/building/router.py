@@ -13,22 +13,22 @@ async def getAllOrganisationByFilter(filterBy : bld.BuildingFilter = Depends()):
 
 @router.get(
         '/in_circle'
-        ,summary="Получение зданий, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки"
+        ,summary="Получение зданий, которые находятся в заданном радиусе относительно указанной точки"
         ,response_model=List[bld.Building]
 )
-async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
+async def getBuildingsInCircle(inCircle: bld.InCircle = Depends()):
     return await connection(BuildingDAO.findAllInCircle)(**inCircle.model_dump(exclude_none=True))
 
 @router.get(
         '/in_box'
-        ,summary="Получение зданий, которые находятся в заданном радиусе/прямоугольной области относительно указанной точки"
+        ,summary="Получение зданий, которые находятся в заданной прямоугольной области относительно указанной точки"
         ,response_model=List[bld.Building]
 )
-async def getOrganisationsInBox(inBox: bld.InBox = Depends()):
+async def getBuildingsInBox(inBox: bld.InBox = Depends()):
     return await connection(BuildingDAO.findAllInBox)(**inBox.model_dump(exclude_none=True))
 
 @router.get('/{id}',summary="Получение здания по id",response_model=bld.Building | None)
-async def getOrganisationById(id: int):
+async def getBuildingsById(id: int):
     return await connection(BuildingDAO.findOneOrNone)(id=id)
 
 

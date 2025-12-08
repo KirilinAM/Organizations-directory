@@ -10,11 +10,11 @@ from app.security import verifyApiKey
 router = APIRouter(prefix='/v1/activities',tags=['Деятельность'],dependencies=[Depends(verifyApiKey)])
 
 @router.get('/',summary="Получение деятельностей", response_model=List[act.Activity])
-async def getAllOrganisationByFilter(filterBy: act.ActivityFilter = Depends()):
+async def getActivityByFilter(filterBy: act.ActivityFilter = Depends()):
     return await connection(ActivityDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
 @router.get('/{id}',summary="Получение деятельности по id и её поддеятельностей",response_model=act.ActivityWithDescendans)
-async def getOrganisationById(id: int):
+async def getActivityById(id: int):
     return await connection(ActivityDAO.getItAndAllDescendans)(id=id)
 
 @router.get(

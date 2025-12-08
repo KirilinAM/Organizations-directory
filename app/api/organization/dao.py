@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.activity.dao import ActivityDAO
 from geoalchemy2 import Geography
 from app.api.activity.dao import ActivityDAO
+from app.api.building.dao import BuildingDAO
 
 class OrganizationDAO(BaseDAO):
     model = Organization
@@ -54,6 +55,30 @@ class OrganizationDAO(BaseDAO):
 
         return result
 
+    @classmethod
+    async def findByBuildingInCircle(cls, session: AsyncSession, **inCircle):
+        buildings = await BuildingDAO.findAllInCircle(session=session,**inCircle)
+        ids = [building.id for building in buildings]
+        query = (
+            select(cls.model)
+            .filter(cls.model.building_id.in_(ids))
+        )
 
-    # @classmethod
-    # async def find
+        result = await session.execute(query)
+        result = result.scalars().all()
+
+        return result
+
+    @classmethod
+    async def findByBuildingInBox(cls, session: AsyncSession, **inBox):
+        buildings = await BuildingDAO.findAllInBox(session=session,**inBox)
+        ids = [building.id for building in buildings]
+        query = (
+            select(cls.model)
+            .filter(cls.model.building_id.in_(ids))
+        )
+
+        result = await session.execute(query)
+        result = result.scalars().all()
+
+        return result
