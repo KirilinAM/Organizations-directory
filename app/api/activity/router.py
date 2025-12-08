@@ -23,5 +23,5 @@ async def getOrganisationById(id: int):
         ,response_model=List[org.Organization]
 )
 async def getOrganisationByActivityFamily(id: int): 
-    res = await connection(OrganizationDAO.findAllByActivityUpperId)(upperId=id)
+    res = await connection(OrganizationDAO.findByActivityUpperId)(upperId=id)
     return res

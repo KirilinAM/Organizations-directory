@@ -7,22 +7,22 @@ Longitude = Annotated[float,Field(ge=-180,le=180,description='Долгота')]
 class Building(BaseModel):
     id: int
     address: str
-    latitude: Latitude
     longitude: Longitude
+    latitude: Latitude
 
 class BuildingFilter(BaseModel):
     address: str | None = None
-    latitude: Latitude | None = None
     longitude: Longitude | None = None
+    latitude: Latitude | None = None
 
 class InCircle(BaseModel):
-    latitude: Latitude
     longitude: Longitude
+    latitude: Latitude
     radius: float = Field(ge=0,description='Радиус окружности в км')
 
 class InBox(BaseModel):
-    latitude: Latitude 
     longitude: Longitude 
+    latitude: Latitude 
     bbox_latitude: float = Field(ge=0,description='Размах широты прямоугольника')
     bbox_longitude: float = Field(ge=0,description='Размах долготы прямоугольника')
 
