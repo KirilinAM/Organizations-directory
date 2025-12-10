@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Annotated
-from app.api.building.models import *
-from app.api.activity.models import *
+from typing import List
+
+from pydantic import BaseModel, ConfigDict
+
+from app.api.activity.models import Activity
+from app.api.building.models import Building
 
 
 class Organization(BaseModel):
@@ -9,15 +11,17 @@ class Organization(BaseModel):
     name: str
     building_id: int
 
+
 class OrganizationFullInfo(Organization):
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int
     name: str
     building_id: int
-    phones: List['Phone']
-    building: 'Building'
-    activities: List['Activity']
+    phones: List["Phone"]
+    building: "Building"
+    activities: List["Activity"]
+
 
 class Phone(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -28,6 +32,7 @@ class Phone(BaseModel):
     #     if not re.match(r'^\+\d{1,15}$', value):
     #         raise ValueError('Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр')
     #     return value
+
 
 class OrganizationFilter(BaseModel):
     model_config = ConfigDict(from_attributes=True)
