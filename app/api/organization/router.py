@@ -16,7 +16,12 @@ router = APIRouter(
 )
 
 
-@router.get("/", summary="Получение организаций", response_model=List[org.Organization])
+@router.get(
+    "/", 
+    summary="Получение организаций", 
+    description="Получение всех организаций", 
+    response_model=List[org.Organization]
+)
 async def getAllOrganisationByFilter(filterBy: org.OrganizationFilter = Depends()):
     return await connection(OrganizationDAO.findAll)(
         **filterBy.model_dump(exclude_none=True)
@@ -25,7 +30,8 @@ async def getAllOrganisationByFilter(filterBy: org.OrganizationFilter = Depends(
 
 @router.get(
     "/in_circle",
-    summary="Получение организаций из зданий, которые находятся в заданном радиусе относительно указанной точки",
+    summary="Получение организаций в радиусе",
+    description="Получение организаций в зданиях, которые находятся в заданном радиусе относительно указанной точки",
     response_model=List[org.Organization],
 )
 async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
@@ -36,7 +42,8 @@ async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
 
 @router.get(
     "/in_box",
-    summary="Получение организаций из зданий, которые находятся в заданной прямоугольной области относительно указанной точки",
+    summary="Получение организаций в прямоугольной области",
+    description="Получение организаций в зданиях, которые находятся в заданной прямоугольной области относительно указанной точки",
     response_model=List[org.Organization],
 )
 async def getOrganisationsInBox(inBox: bld.InBox = Depends()):
@@ -47,7 +54,8 @@ async def getOrganisationsInBox(inBox: bld.InBox = Depends()):
 
 @router.get(
     "/by_activity_tree",
-    summary="Получение организаций ведущих указанную деятельность / её поддеятельности",
+    summary="Получение организаций по деятельности",
+    description="Получение организаций ведущих указанную деятельность / её поддеятельности",
     response_model=List[org.Organization],
 )
 async def getOrganisationByActivityFamily(upper_id: int):
@@ -58,6 +66,7 @@ async def getOrganisationByActivityFamily(upper_id: int):
 @router.get(
     "/{id}",
     summary="Получение организации по id",
+    description="Получение организации по id",
     response_model=org.OrganizationFullInfo | None,
 )
 async def getOrganisationById(id: int):

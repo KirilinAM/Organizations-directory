@@ -15,7 +15,12 @@ router = APIRouter(
 )
 
 
-@router.get("/", summary="Получение деятельностей", response_model=List[act.Activity])
+@router.get(
+        "/", 
+        summary="Получение деятельностей", 
+        description="Получение всех деятельностей", 
+        response_model=List[act.Activity]
+)
 async def getActivityByFilter(filterBy: act.ActivityFilter = Depends()):
     return await connection(ActivityDAO.findAll)(
         **filterBy.model_dump(exclude_none=True)
@@ -24,7 +29,8 @@ async def getActivityByFilter(filterBy: act.ActivityFilter = Depends()):
 
 @router.get(
     "/{id}",
-    summary="Получение деятельности по id и её поддеятельностей",
+    summary="Получение деятельности и её поддеятельностей по id",
+    description="Получение деятельности и её поддеятельностей по id",
     response_model=act.ActivityWithDescendans,
 )
 async def getActivityById(id: int):
@@ -33,7 +39,8 @@ async def getActivityById(id: int):
 
 @router.get(
     "/{id}/organizations",
-    summary="Получение организаций ведущих указанную деятельность / её поддеятельности",
+    summary="Получение организаций по деятельности",
+    description="Получение организаций ведущих указанную деятельность / её поддеятельности",
     response_model=List[org.Organization],
 )
 async def getOrganisationByActivityFamily(id: int):

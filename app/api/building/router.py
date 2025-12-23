@@ -13,7 +13,12 @@ router = APIRouter(
 )
 
 
-@router.get("/", summary="Получение зданий", response_model=List[bld.Building])
+@router.get(
+    "/", 
+    summary="Получение зданий", 
+    description="Получение всех зданий", 
+    response_model=List[bld.Building]
+)
 async def getAllOrganisationByFilter(filterBy: bld.BuildingFilter = Depends()):
     return await connection(BuildingDAO.findAll)(
         **filterBy.model_dump(exclude_none=True)
@@ -22,7 +27,8 @@ async def getAllOrganisationByFilter(filterBy: bld.BuildingFilter = Depends()):
 
 @router.get(
     "/in_circle",
-    summary="Получение зданий, которые находятся в заданном радиусе относительно указанной точки",
+    summary="Получение зданий в радиусе",
+    description="Получение зданий, которые находятся в заданном радиусе относительно указанной точки",
     response_model=List[bld.Building],
 )
 async def getBuildingsInCircle(inCircle: bld.InCircle = Depends()):
@@ -33,7 +39,8 @@ async def getBuildingsInCircle(inCircle: bld.InCircle = Depends()):
 
 @router.get(
     "/in_box",
-    summary="Получение зданий, которые находятся в заданной прямоугольной области относительно указанной точки",
+    summary="Получение зданий в прямоугольной области",
+    description="Получение зданий, которые находятся в заданной прямоугольной области относительно указанной точки",
     response_model=List[bld.Building],
 )
 async def getBuildingsInBox(inBox: bld.InBox = Depends()):
@@ -43,7 +50,10 @@ async def getBuildingsInBox(inBox: bld.InBox = Depends()):
 
 
 @router.get(
-    "/{id}", summary="Получение здания по id", response_model=bld.Building | None
+    "/{id}", 
+    summary="Получение здания по id", 
+    description="Получение здания по id", 
+    response_model=bld.Building | None
 )
 async def getBuildingsById(id: int):
     return await connection(BuildingDAO.findOneOrNone)(id=id)

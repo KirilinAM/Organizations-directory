@@ -4,7 +4,6 @@ from sqlalchemy import text
 from app.api.activity.router import router as actRouter
 from app.api.building.router import router as bldRouter
 from app.api.organization.router import router as orgRouter
-from app.database.database import asyncSessionMaker
 
 
 app = FastAPI()
@@ -15,7 +14,4 @@ app.include_router(bldRouter)
 
 @app.get("/")
 async def rootApi():
-    async with asyncSessionMaker() as session:
-        dbRes = await session.execute(text("SELECT 1"))
-        dbRes = dbRes.scalar()
-    return {"message": "pass", "db": dbRes}
+    return {"message": "online"}
