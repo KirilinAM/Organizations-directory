@@ -19,10 +19,11 @@ router = APIRouter(
 @router.get(
     "/", 
     summary="Получение организаций", 
-    description="Получение всех организаций", 
+    # description="Получение всех организаций", 
     response_model=List[org.Organization]
 )
 async def getAllOrganisationByFilter(filterBy: org.OrganizationFilter = Depends()):
+    """Получение всех организаций"""
     return await connection(OrganizationDAO.findAll)(
         **filterBy.model_dump(exclude_none=True)
     )
