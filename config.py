@@ -13,20 +13,16 @@ class Settings(BaseSettings):
     SQL_ECHO: bool
 
     # DATABASE_SQLITE = 'sqlite+aiosqlite:///data/db.sqlite3'
-    model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-    )
+    model_config = SettingsConfigDict(env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
     def getSyncDbUrl(self):
         return (
-            f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@"
-            f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@" f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 
     def getAsyncDbUrl(self):
         return (
-            f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@"
-            f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@" f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 
 

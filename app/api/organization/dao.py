@@ -52,9 +52,7 @@ class OrganizationDAO(BaseDAO):
         query = (
             select(cls.model)
             .join(Organization_Activity_Rel)
-            .join(
-                activityCte, activityCte.c.id == Organization_Activity_Rel.activity_id
-            )
+            .join(activityCte, activityCte.c.id == Organization_Activity_Rel.activity_id)
             .distinct()
         )
 

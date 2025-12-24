@@ -17,9 +17,7 @@ class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    updated_ay: Mapped[datetime] = mapped_column(
-        server_default=func.now(), onupdate=func.now()
-    )
+    updated_ay: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
 
     @declared_attr.directive
     def __tablename__(cls) -> str:

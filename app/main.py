@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from sqlalchemy import text
 
 from app.api.activity.router import router as actRouter
 from app.api.building.router import router as bldRouter

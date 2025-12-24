@@ -11,9 +11,7 @@ class ActivityDAO(BaseDAO):
     model = Activity
 
     @classmethod
-    async def getItAndAllDescendans(
-        cls, session: AsyncSession, id: int, maxDepth: int = 3
-    ):
+    async def getItAndAllDescendans(cls, session: AsyncSession, id: int, maxDepth: int = 3):
         cte = await cls._getItAndAllDescendans(id, maxDepth)
         query = select(Activity).join(cte, cte.c.id == Activity.id)
 

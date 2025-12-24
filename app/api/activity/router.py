@@ -10,21 +10,17 @@ from app.database.database import connection
 from app.security import verifyApiKey
 
 
-router = APIRouter(
-    prefix="/v1/activities", tags=["Деятельность"], dependencies=[Depends(verifyApiKey)]
-)
+router = APIRouter(prefix="/v1/activities", tags=["Деятельность"], dependencies=[Depends(verifyApiKey)])
 
 
 @router.get(
-        "/", 
-        summary="Получение деятельностей", 
-        description="Получение всех деятельностей", 
-        response_model=List[act.Activity]
+    "/",
+    summary="Получение деятельностей",
+    description="Получение всех деятельностей",
+    response_model=List[act.Activity],
 )
 async def getActivityByFilter(filterBy: act.ActivityFilter = Depends()):
-    return await connection(ActivityDAO.findAll)(
-        **filterBy.model_dump(exclude_none=True)
-    )
+    return await connection(ActivityDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
 
 @router.get(

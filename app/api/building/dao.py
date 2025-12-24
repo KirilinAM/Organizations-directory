@@ -43,10 +43,10 @@ class BuildingDAO(BaseDAO):
         maxLng = lng + bboxLng / 2
         minLat = lat - bboxLat / 2
         maxLat = lat + bboxLat / 2
-        bbox = f"POLYGON(({minLng} {minLat}, {minLng} {maxLat}, {maxLng} {maxLat}, {maxLng} {minLat}, {minLng} {minLat}))"
-        query = select(cls.model).filter(
-            func.ST_Intersects(Building.geom, func.ST_GeogFromText(bbox))
+        bbox = (
+            f"POLYGON(({minLng} {minLat}, {minLng} {maxLat}, {maxLng} {maxLat}, {maxLng} {minLat}, {minLng} {minLat}))"
         )
+        query = select(cls.model).filter(func.ST_Intersects(Building.geom, func.ST_GeogFromText(bbox)))
         result = await session.execute(query)
         result = result.scalars().all()
 

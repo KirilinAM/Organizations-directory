@@ -17,16 +17,14 @@ router = APIRouter(
 
 
 @router.get(
-    "/", 
-    summary="Получение организаций", 
-    # description="Получение всех организаций", 
-    response_model=List[org.Organization]
+    "/",
+    summary="Получение организаций",
+    # description="Получение всех организаций",
+    response_model=List[org.Organization],
 )
 async def getAllOrganisationByFilter(filterBy: org.OrganizationFilter = Depends()):
     """Получение всех организаций"""
-    return await connection(OrganizationDAO.findAll)(
-        **filterBy.model_dump(exclude_none=True)
-    )
+    return await connection(OrganizationDAO.findAll)(**filterBy.model_dump(exclude_none=True))
 
 
 @router.get(
@@ -36,9 +34,7 @@ async def getAllOrganisationByFilter(filterBy: org.OrganizationFilter = Depends(
     response_model=List[org.Organization],
 )
 async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
-    return await connection(OrganizationDAO.findByBuildingInCircle)(
-        **inCircle.model_dump(exclude_none=True)
-    )
+    return await connection(OrganizationDAO.findByBuildingInCircle)(**inCircle.model_dump(exclude_none=True))
 
 
 @router.get(
@@ -48,9 +44,7 @@ async def getOrganisationsInCircle(inCircle: bld.InCircle = Depends()):
     response_model=List[org.Organization],
 )
 async def getOrganisationsInBox(inBox: bld.InBox = Depends()):
-    return await connection(OrganizationDAO.findByBuildingInBox)(
-        **inBox.model_dump(exclude_none=True)
-    )
+    return await connection(OrganizationDAO.findByBuildingInBox)(**inBox.model_dump(exclude_none=True))
 
 
 @router.get(
