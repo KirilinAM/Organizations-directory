@@ -18,6 +18,7 @@ black = "*"
 flake8 = "*"
 isort = "*"
 pre-commit = "*"
+flake8-pyproject = "*"
 
 [requires]
 python_version = "3.13"
